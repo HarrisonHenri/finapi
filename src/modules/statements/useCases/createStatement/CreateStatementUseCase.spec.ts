@@ -1,4 +1,3 @@
-import { User } from "../../../users/entities/User";
 import { InMemoryUsersRepository } from "../../../users/repositories/in-memory/InMemoryUsersRepository";
 import { InMemoryStatementsRepository } from "../../repositories/in-memory/InMemoryStatementsRepository";
 import { CreateStatementError } from "./CreateStatementError";
@@ -33,6 +32,7 @@ describe("Create Statement", () => {
       { type:OperationType.DEPOSIT, amount:10, description:'Description', user_id: userCreated.id as string}
     );
     expect(statementCreated).toHaveProperty("id");
+    expect(statementCreated.description).toBe("Description")
   });
   it("should be able to create a new withdraw statement", async () => {
     const userCreated = await usersRepositoryInMemory.create(user)
@@ -44,6 +44,7 @@ describe("Create Statement", () => {
       { type:OperationType.WITHDRAW, amount:10, description:'Description', user_id: userCreated.id as string}
     );
     expect(statementCreated).toHaveProperty("id");
+    expect(statementCreated.description).toBe("Description")
   });
   it("should not be able to create a new withdraw statement for a user without enough balance", () => {
     expect(async ()=>{
@@ -52,10 +53,16 @@ describe("Create Statement", () => {
       await createStatementUseCase.execute(
         { type:OperationType.DEPOSIT, amount:9, description:'Description', user_id: userCreated.id as string}
       );
-      const statementCreated = await createStatementUseCase.execute(
+      await createStatementUseCase.execute(
         { type:OperationType.WITHDRAW, amount:10, description:'Description', user_id: userCreated.id as string}
       );
-      expect(statementCreated).toHaveProperty("id");
     }).rejects.toBeInstanceOf(CreateStatementError.InsufficientFunds)
+  });
+  it("should not be able to create a new statement for a user not found", () => {
+    expect(async ()=>{
+     await createStatementUseCase.execute(
+        { type:OperationType.DEPOSIT, amount:9, description:'Description', user_id: '123asda21-asd123-as1'}
+      );
+    }).rejects.toBeInstanceOf(CreateStatementError.UserNotFound)
   });
 });

@@ -1,5 +1,6 @@
 import { InMemoryUsersRepository } from "../../../users/repositories/in-memory/InMemoryUsersRepository";
 import { InMemoryStatementsRepository } from "../../repositories/in-memory/InMemoryStatementsRepository";
+import { GetBalanceError } from "./GetBalanceError";
 import { GetBalanceUseCase } from "./GetBalanceUseCase";
 
 let getBalanceUseCase: GetBalanceUseCase;
@@ -37,5 +38,10 @@ describe("Get Balances", () => {
     const balance = await getBalanceUseCase.execute({user_id:userCreated.id as string})
 
     expect(balance.balance).toBe(statement.amount)
+  });
+  it("should not be able to get the user balance when the user is not found", () => {
+    expect(async ()=>{
+      await getBalanceUseCase.execute({user_id: "asdhu12gyg3-dasdsdabsd"})
+    }).rejects.toBeInstanceOf(GetBalanceError)
   });
 });

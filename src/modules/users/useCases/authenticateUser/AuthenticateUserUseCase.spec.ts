@@ -19,8 +19,7 @@ describe("Authenticate User", () => {
     const user = {
       name: "User name",
       password: "123456",
-      email: "user@email.com",
-      driver_license: "123456789",
+      email: "user@email.com"
     };
 
     await createUserUseCase.execute(user);
@@ -45,8 +44,7 @@ describe("Authenticate User", () => {
       const user = {
         name: "User name",
         password: "123456",
-        email: "user@email.com",
-        driver_license: "123456789",
+        email: "user@email.com"
       };
       await createUserUseCase.execute(user);
 

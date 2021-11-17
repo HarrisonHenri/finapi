@@ -33,7 +33,7 @@ export class Statement {
   @Column()
   description: string;
 
-  @Column('decimal', { precision: 5, scale: 2 })
+  @Column('decimal', { precision: 10, scale: 2 })
   amount: number;
 
   @Column({ type: 'enum', enum: OperationType })
@@ -44,6 +44,9 @@ export class Statement {
 
   @CreateDateColumn()
   updated_at: Date;
+
+  @Column()
+  category: string;
 
   constructor() {
     if (!this.id) {
